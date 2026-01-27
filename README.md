@@ -11,7 +11,7 @@
 ## 📋 Descripción
 Este proyecto consiste en la resolución de **64 ejercicios de consultas SQL** para analizar la base de datos **Sakila** (una simulación de un videoclub). 
 
-El objetivo principal ha sido poner en práctica conocimientos avanzados de lógica de bases de datos relacionales como parte del **[PON AQUÍ EL NOMBRE DE TU MÁSTER, EJ: Máster en Data Analytics]** en **[PON AQUÍ TU ESCUELA O UNIVERSIDAD]**.
+El objetivo principal ha sido poner en práctica conocimientos avanzados de lógica de bases de datos relacionales como parte del **Máster en Data Analytics** 
 
 ## 🛠️ Herramientas utilizadas
 * **Lenguaje:** SQL (PostgreSQL)
