@@ -1,7 +1,9 @@
 # 🎬 Proyecto SQL: Análisis de Base de Datos Sakila
 
-**Autor:** Miguel Angle Rosingana Martin
+**Autor:** Miguel Angel Rosingana Martin
+
 **LinkedIn:** www.linkedin.com/in/miguel-angel-rosingana
+
 **Email:** miguel.rosin@gmail.com
 
 ---
