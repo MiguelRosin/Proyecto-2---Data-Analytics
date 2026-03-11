@@ -9,10 +9,11 @@ FROM actor
 WHERE actor_id BETWEEN 30 AND 40;
 
 -- Ejercicio 4: Películas cuyo idioma coincide con el original
--- (Nota: Si sale vacío es normal, en esta BBDD a veces original_language_id es NULL)
+-- Mejora: Excluimos explícitamente los nulos antes de comparar
 SELECT title 
 FROM film 
-WHERE language_id = original_language_id;
+WHERE original_language_id IS NOT NULL 
+  AND language_id = original_language_id;
 
 -- Ejercicio 5: Películas ordenadas por duración (de menor a mayor)
 SELECT title, length 
@@ -22,7 +23,7 @@ ORDER BY length ASC;
 -- Ejercicio 6: Actores con 'Allen' en su apellido
 SELECT first_name, last_name 
 FROM actor 
-WHERE last_name LIKE 'ALLEN';
+WHERE last_name LIKE '%ALLEN%';
 
 -- Ejercicio 7: Cantidad total de películas por clasificación
 SELECT rating, COUNT(*) 
@@ -152,11 +153,11 @@ GROUP BY actor_id
 HAVING COUNT(film_id) > 40;
 
 -- Ejercicio 29: Todas las películas y su cantidad disponible en inventario
--- Usamos LEFT JOIN para que salgan las películas aunque no estén en el inventario (saldrán con 0 o NULL)
-SELECT f.title, COUNT(i.inventory_id) as copias_disponibles
+-- Mejora: Agrupamos por el ID único de la película para evitar solapamientos de nombres
+SELECT f.title, COUNT(i.inventory_id) AS copias_disponibles
 FROM film f
 LEFT JOIN inventory i ON f.film_id = i.film_id
-GROUP BY f.title;
+GROUP BY f.film_id, f.title;
 
 -- Ejercicio 30: Actores y el número de películas en las que han actuado
 -- Unimos actor con film_actor
@@ -180,11 +181,11 @@ LEFT JOIN film_actor fa ON a.actor_id = fa.actor_id
 LEFT JOIN film f ON fa.film_id = f.film_id;
 
 -- Ejercicio 33: Todas las películas y todos los registros de alquiler
--- Unimos film -> inventory -> rental
+-- Unimos film -> inventory -> rental asegurando que la tabla 'film' sea la base
 SELECT f.title, r.rental_date, r.return_date
 FROM film f
-JOIN inventory i ON f.film_id = i.film_id
-JOIN rental r ON i.inventory_id = r.inventory_id;
+LEFT JOIN inventory i ON f.film_id = i.film_id
+LEFT JOIN rental r ON i.inventory_id = r.inventory_id;
 
 -- Ejercicio 34: Los 5 clientes que más dinero han gastado
 -- Sumamos los pagos por cliente, ordenamos descendente y limitamos a 5
@@ -322,7 +323,6 @@ AND r.return_date IS NULL
 ORDER BY f.title ASC;
 
 -- Ejercicio 54: Actores que han actuado en pelis 'Sci-Fi'
--- Usamos DISTINCT para que no salga el mismo actor varias veces
 SELECT DISTINCT a.first_name, a.last_name
 FROM actor a
 JOIN film_actor fa ON a.actor_id = fa.actor_id
@@ -332,9 +332,6 @@ WHERE c.name = 'Sci-Fi'
 ORDER BY a.last_name ASC;
 
 -- Ejercicio 55: Actores en películas alquiladas después de que 'Spartacus Cheaper' se alquilara por primera vez
--- 1. Buscamos la fecha del primer alquiler de 'Spartacus Cheaper'.
--- 2. Filtramos los alquileres posteriores a esa fecha.
--- 3. Obtenemos los actores de esas películas.
 SELECT DISTINCT a.first_name, a.last_name
 FROM actor a
 JOIN film_actor fa ON a.actor_id = fa.actor_id
